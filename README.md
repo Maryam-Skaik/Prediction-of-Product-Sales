@@ -1,74 +1,168 @@
-# Prediction-of-Product-Sales
+# 🛒 BigMart Sales EDA
 
-## Project Description
-This project focuses on predicting product sales for various outlets using historical sales data. The dataset contains information about products (e.g., weight, fat content, price) and outlets (e.g., type, location, establishment year), enabling us to explore patterns that influence sales and prepare data for predictive modeling.
-
-The goal of this project is to understand the data through exploratory data analysis (EDA) and visualize relationships between product and outlet features with sales outcomes. This analysis helps identify key factors driving revenue, detect anomalies, and prepare insights for modeling.
-
----
-
-## Tools Used
-- Python 3
-- Pandas
-- Matplotlib
-- Seaborn
-- Jupyter Notebook
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-orange)
+![NumPy](https://img.shields.io/badge/NumPy-Numerical%20Computing-blue)
+![Seaborn](https://img.shields.io/badge/Seaborn-Visualization-green)
+![Matplotlib](https://img.shields.io/badge/Matplotlib-Plotting-yellow)
 
 ---
 
-## Exploratory Data Analysis (EDA)
+## 📌 Overview
+This project performs **Exploratory Data Analysis (EDA)** on the BigMart dataset to uncover patterns and identify the key factors affecting `Item_Outlet_Sales`.
 
-### 1. Distribution of Item Outlet Sales
-<img width="638" height="507" alt="1" src="https://github.com/user-attachments/assets/184c2e7c-a70b-4a63-960e-b187b3530cd3" />
-
-
-**Interpretation:**  
-The histogram shows a highly right-skewed distribution of Item_Outlet_Sales, indicating that most products generate low sales, while a few high-performing items contribute disproportionately to revenue.
-
----
-
-### 2. Correlation Heatmap
-<img width="767" height="682" alt="2" src="https://github.com/user-attachments/assets/37663078-d362-4de5-9778-d3ac8f4f81b5" />
-
-
-**Interpretation:**  
-The heatmap reveals that Item_MRP has the strongest positive correlation (0.57) with sales, suggesting that higher-priced items generally produce higher revenue. Item_Visibility shows a weak negative correlation with sales, and other numeric features show little dependency, indicating that each variable provides distinct information.
+The workflow includes:
+- Data cleaning and preprocessing  
+- Univariate and bivariate analysis  
+- Visualization-driven insights  
+- Business-oriented interpretation  
 
 ---
 
-## Additional Insights from EDA
-- **Item Weight:** A spike at `-1` indicates missing values filled for cleaning; actual weights are mostly between 5–21.  
-- **Item Visibility:** Most items have low visibility, with few highly visible products.  
-- **Item MRP:** The data is naturally grouped into different price tiers.  
-- **Outlet Location Type:** Tier 3 outlets appear most frequently, and median sales tend to be higher in Tier 2 and Tier 3.  
+## 📂 Dataset Summary
+- **Total Records:** 8523  
+- **Features:** 12  
+- **Target Variable:** `Item_Outlet_Sales`  
+
+### Feature Types
+- **Numerical:**  
+  `Item_Weight`, `Item_Visibility`, `Item_MRP`, `Outlet_Establishment_Year`, `Item_Outlet_Sales`  
+
+- **Categorical:**  
+  `Item_Fat_Content`, `Item_Type`, `Outlet_Size`, `Outlet_Location_Type`, `Outlet_Type`  
 
 ---
 
-## Next Steps
-1. Feature engineering and preprocessing for predictive modeling.  
-2. Implement machine learning models to predict Item_Outlet_Sales.  
-3. Evaluate model performance and refine features.  
+## 🧹 Data Cleaning
+
+### 🔹 Missing Values
+- **Item_Weight (~17%)**
+  - Missing values are **not random** (dependent on `Item_Type`)
+  - Imputed using **median per Item_Type**
+
+- **Outlet_Size (~28%)**
+  - Missing values are **not random** (dependent on `Outlet_Type`)
+  - Imputed using **mode per Outlet_Type**
 
 ---
 
-## Repository Contents
-- `Prediction-of-Product-Sales.ipynb`: Jupyter notebook containing EDA, visualizations, and code.  
-- `README.md`: This file describing the project.  
+### 🔹 Data Consistency
+- Standardized `Item_Fat_Content`:
+  - `LF`, `low fat` → `Low Fat`
+  - `reg` → `Regular`
+
+- No duplicate records detected  
 
 ---
 
-## How to Run
-1. Clone the repository:
+## 📊 Exploratory Data Analysis
 
-```bash
-git clone https://github.com/Maryam-Skaik/Prediction-of-Product-Sales.git
-```
+### 🔹 Key Visualization 1: Price vs Sales
 
-2. Open the Jupyter Notebook `Prediction-of-Product-Sales.ipynb.`
-3. Install required libraries if not already installed:
+#### 📈 Regplot: `Item_MRP` vs `Item_Outlet_Sales`
 
-```bash
-pip install pandas matplotlib seaborn
-````
+<img width="700" height="492" alt="01" src="https://github.com/user-attachments/assets/f0adc5fa-ba35-4078-ad2c-f50084e4eb96" />
 
-4. Run the notebook cells sequentially to reproduce the analysis and plots.
+- A regression plot was used to examine the relationship between item price and sales.
+
+**Observation:**
+- There is a clear **positive correlation (≈ 0.57)** between `Item_MRP` and `Item_Outlet_Sales`.
+- Sales tend to increase as price increases.
+- The relationship is not perfectly linear, indicating possible pricing segments.
+
+**Insight:**
+- `Item_MRP` is the **strongest numerical driver** of sales.
+
+**Business Interpretation:**
+- Pricing strategy plays a critical role in revenue generation.
+- Optimizing price ranges can significantly impact sales performance.
+
+---
+
+### 🔹 Key Visualization 2: Outlet Type Impact
+
+#### 📊 Barplot + Stripplot: `Outlet_Type` vs `Item_Outlet_Sales`
+
+<img width="736" height="485" alt="02" src="https://github.com/user-attachments/assets/78f4caa0-1f6a-45fe-b67b-1fa37d96cbb2" />
+
+- A **barplot** (mean sales) combined with a **stripplot** (distribution) was used to analyze outlet performance.
+
+**Observation:**
+- **Supermarket Type3** has the highest average sales.
+- Followed by **Supermarket Type1**.
+- **Supermarket Type2** performs moderately.
+- **Grocery Store** has the lowest sales.
+- Stripplot shows variability and spread within each category.
+
+**Insight:**
+- `Outlet_Type` has a **strong impact** on sales performance.
+
+**Business Interpretation:**
+- Larger, well-established supermarket formats outperform smaller stores.
+- Grocery stores generate significantly lower revenue.
+
+---
+
+## 📈 Additional Findings
+
+### 🧩 Product-Level Insights
+- `Item_MRP` → Strong positive correlation (**0.57**)  
+- `Item_Visibility` → Weak negative correlation (~ -0.13)  
+- `Item_Weight` → No significant impact  
+- `Item_Type` → Certain categories perform better  
+
+---
+
+### 🏪 Outlet-Level Insights
+- `Outlet_Type` → Major driver of sales  
+- `Outlet_Size` → Medium outlets perform best  
+- `Outlet_Location_Type` → Tier 2 & Tier 3 outperform Tier 1  
+- `Outlet_Establishment_Year` → No strong relationship  
+
+---
+
+## 📉 Sales Behavior
+- Sales distribution is **right-skewed**  
+- Few items generate **very high sales**  
+- Majority of items contribute moderate to low revenue  
+
+---
+
+## ⚠️ Observations & Limitations
+- Some categorical features are **imbalanced**  
+- Imputation introduces repeated values (expected)  
+- Weak correlations suggest **non-linear relationships**  
+
+---
+
+## 🚀 Conclusion
+- **Strongest drivers:** `Item_MRP`, `Outlet_Type`  
+- **Moderate impact:** `Outlet_Size`, `Outlet_Location_Type`  
+- **Low impact:** `Item_Weight`, `Item_Visibility`  
+
+### 📌 Recommendations:
+- Focus on **pricing optimization**  
+- Invest in **high-performing outlet types**  
+- Prioritize **top-selling product categories**  
+
+---
+
+## 📌 Next Steps
+- Feature engineering (`Outlet_Age`)  
+- Handle skewness (log transformation)  
+- Build predictive models  
+- Evaluate feature importance  
+
+---
+
+## 🛠️ Tech Stack
+- Python 🐍  
+- Pandas  
+- NumPy  
+- Matplotlib / Seaborn  
+
+---
+
+## 📎 Author
+**Maryam Skaik**  
+Backend Developer | Data Science Enthusiast
